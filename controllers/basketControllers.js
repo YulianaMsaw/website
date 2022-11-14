@@ -1,6 +1,6 @@
 const  {Product}=require('../models/models')
 
-const  BasketControllersHelper=require('../controllers/basketControllersHelper')
+const  BasketControllersHelper=require('../helpers/basketHelper')
 
 const ApiError=require('../error/ApiErrors')
 

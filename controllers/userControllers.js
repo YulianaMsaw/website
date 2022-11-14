@@ -42,6 +42,14 @@ class UserControllers{
         
     }
 
+    async getOne(id) {
+        const user = await User.findByPk(id)
+        if (!user) {
+            throw new Error('Пользователь не найден в БД')
+        }
+        return user
+    }
+
     async login(req,res){
 
         try {
