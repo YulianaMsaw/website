@@ -5,13 +5,15 @@ class TypeControllers{
 
     async create(req,res){
 
-        const {name}=req.query
+
+        const {name}=req.body
         if(!name)
         {
             return res.json(ApiError.badRequest('Имя типа не задано'))
         }
         try {
             const type=await Type.create({ name : name})
+            console.log(type)
             return res.json(type)
         }
         catch (err){

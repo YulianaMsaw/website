@@ -8,11 +8,12 @@ class ProductControllers{
     async create(req,res){
 
         try {
-            let {name,price,brandId,typeId,info}=req.query
+            let {name,price,brandId,typeId,info}=req.body
             const  {img}=req.files
             let fileName=uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
+            console.log(req.body)
             const product= await Product.create({name, price, brandId, typeId, img:fileName})
             if(info){
                 info=JSON.parse(info)
@@ -36,13 +37,16 @@ class ProductControllers{
     async get(req,res){
 
         const {id}=req.params
-        const product=Product.findOne(
+        console.log(id)
+
+        const product=await Product.findOne(
             {
                 where: {id},
                 include: [{model: ProductInfo, as: 'info'}]
             },
         )
 
+        console.log(product)
         return res.json(product)
     }
 

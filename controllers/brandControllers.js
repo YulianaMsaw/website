@@ -4,7 +4,7 @@ class BrandControllers{
 
     async create(req,res){
 
-        const {name}=req.query
+        const {name}=req.body
         if(!name)
         {
             return res.json(ApiError.badRequest('Имя бренда не задано'))
