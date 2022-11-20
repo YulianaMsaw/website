@@ -4,8 +4,6 @@ const ApiError=require('../error/ApiErrors')
 class TypeControllers{
 
     async create(req,res){
-
-
         const {name}=req.body
         if(!name)
         {

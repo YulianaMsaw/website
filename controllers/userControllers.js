@@ -14,15 +14,15 @@ const  generateAccessToken=(id,roles)=>{
 
      return jwt.sign(payload, process.env.SECRET_KEY, {expiresIn: "24h"})
 }
+const maxAge=60 * 60 * 1000 * 24 * 365  // one year
+const signed=true
+
 class UserControllers{
-
-
 
 
     async registration(req,res){
 
         try{
-
             const {email, password, role}=req.body
             const  errors=validationResult(req)
             if(!errors.isEmpty())
@@ -35,6 +35,9 @@ class UserControllers{
                 return res.json(ApiError.internal('Такой пользователь уже сущетсвует'))
             }
             const  user=await User.create({email, password:hashPassword, role})
+            const basket=await Basket.create({userId:user.id})
+            console.log(basket.id)
+            res.cookie('basketId',basket.id, {maxAge,signed})
             return res.json({message:"Пользователь успешно зарегестрирован!", user})
         }catch (err) {
             return  res.json(ApiError.badRequest('Не удалось создать пользователя'))
@@ -53,6 +56,7 @@ class UserControllers{
     async login(req,res){
 
         try {
+            console.log(req.signedCookies.basketId)
             const {email,password}=req.body
             const user=await User.findOne({where:{email}})
             if(!user){
@@ -60,9 +64,8 @@ class UserControllers{
             }
 
 
-
             const  validPassword=bcrypt.compareSync(password, user.password)
-            console.log(validPassword);
+
             if(!validPassword)
             {
                 return res.status(401).json({message : "Неверный пароль"})

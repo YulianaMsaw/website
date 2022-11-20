@@ -15,6 +15,7 @@ class ProductControllers{
 
             console.log(req.body)
             const product= await Product.create({name, price, brandId, typeId, img:fileName})
+
             if(info){
                 info=JSON.parse(info)
                 info.forEach(i=>
@@ -37,8 +38,6 @@ class ProductControllers{
     async get(req,res){
 
         const {id}=req.params
-        console.log(id)
-
         const product=await Product.findOne(
             {
                 where: {id},
@@ -67,7 +66,6 @@ class ProductControllers{
         }
         if(brandId && !typeId)
         {
-
             product=await  Product.findAndCountAll({where: {brandId}, limit, offset})
         }
         if(brandId && typeId)
