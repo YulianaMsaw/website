@@ -1,5 +1,6 @@
-import {$authHost, $host} from "./index";
-import jwt_decode from "jwt-decode";
+import {$authHost, $host} from "./index"
+import jwt_decode from "jwt-decode"
+import {LOGIN_ROUTE} from "../utils/consts";
 
 export const createType = async (type) => {
     const {data} = await $authHost.post('api/type', type)
@@ -22,18 +23,18 @@ export const fetchBrands = async () => {
 }
 
 export const createDevice = async (device) => {
-    const {data} = await $authHost.post('api/device', device)
+    const {data} = await $authHost.post('api/product', device)
     return data
 }
 
 export const fetchDevices = async (typeId, brandId, page, limit= 5) => {
-    const {data} = await $host.get('api/device', {params: {
+    const {data} = await $host.get('api/product', {params: {
             typeId, brandId, page, limit
         }})
     return data
 }
 
 export const fetchOneDevice = async (id) => {
-    const {data} = await $host.get('api/device/' + id)
+    const {data} = await $host.get('api/product/' + id)
     return data
 }

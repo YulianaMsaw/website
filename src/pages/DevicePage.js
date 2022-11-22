@@ -1,16 +1,45 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Card, Col, Container, Image, Row} from "react-bootstrap";
 import bigStar from '../assets/bigStar.png'
-import {useParams} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {fetchOneDevice} from "../http/deviceAPI";
+import {append} from "../http/basketAPI";
+import {BASKET_ROUTE} from "../utils/consts";
+import {Context} from "../index";
+import {observer} from "mobx-react-lite";
 
-const DevicePage = () => {
+
+
+
+
+const DevicePage = observer(() => {
+
+
+    const {basket} = useContext(Context)
+    const history = useHistory()
     const [device, setDevice] = useState({info: []})
-    console.log(device)
+    const [product, setProduct] = useState('')
     const {id} = useParams()
+
+
     useEffect(() => {
         fetchOneDevice(id).then(data => setDevice(data))
     }, [])
+
+
+
+    const handleClick = async (productId) => {
+
+        try {
+            let data=await append(productId)
+            basket.setProducts(data.products)
+            console.log(basket)
+            history.push(BASKET_ROUTE)
+        }catch (err) {
+            console.log(err)
+        }
+    }
+
 
     return (
         <Container className="mt-3">
@@ -35,7 +64,11 @@ const DevicePage = () => {
                         style={{width: 300, height: 300, fontSize: 32, border: '5px solid lightgray'}}
                     >
                         <h3>От: {device.price} руб.</h3>
-                        <Button variant={"outline-dark"}>Добавить в корзину</Button>
+                        <Button
+                            onClick={() =>handleClick(id)
+                            }
+                            variant={"outline-dark"}>Добавить в корзину
+                        </Button >
                     </Card>
                 </Col>
             </Row>
@@ -47,8 +80,9 @@ const DevicePage = () => {
                     </Row>
                 )}
             </Row>
+
         </Container>
     );
-};
+});
 
 export default DevicePage;
